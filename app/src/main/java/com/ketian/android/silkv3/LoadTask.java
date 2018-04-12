@@ -38,41 +38,47 @@ class LoadTask extends AsyncTask<Void, Void, List<String>> {
         Log.d(TAG, "doInBackground: ");
         List<String> paths = PathUtils.getVoiceFiles_WeChat();
         ArrayList<String> voicePaths = new ArrayList<>();
+        if (paths == null || paths.isEmpty()) {
+            Log.w(TAG, "doInBackground: WeChat user folder not found");
+            return voicePaths;
+        }
+        for (String path : paths) {
+            Log.d(TAG, "doInBackground: " + path);
+        }
 
-        if (paths != null && paths.size() > 0) {
-            File file;
-            for (String path : paths) {
-                if (path != null) {
-                    file = new File(path);
-                    if (file.exists() && file.isDirectory()) {
-                        Stack<String> stack = new Stack<>();
-                        stack.push(path);
-                        while (!stack.empty()) {
-                            File[] fs = null;
-                            String parent = stack.pop();
-                            if (parent != null) {
-                                file = new File(parent);
-                                if (file.isDirectory()) { // ignore file, FIXME
-                                    fs = file.listFiles();
-                                } else {
-                                    continue;
-                                }
-                            }
-                            if (fs == null || fs.length == 0) continue;
-                            for (File f : fs) {
-                                final String name = f.getName();
-                                if (f.isDirectory() && !name.equals(".")
-                                        && !name.equals("..")) {
-                                    stack.push(f.getPath());
-                                } else if (f.isFile()) {
-                                    if (name.endsWith(".amr")) {
-                                        voicePaths.add(f.getAbsolutePath());
-                                    }
-                                }
+        File file;
+        Stack<String> stack;
+        File[] fs = null;
+        for (String path : paths) {
+            file = new File(path);
+            if (file.exists() && file.isDirectory()) {
+                stack = new Stack<>();
+                stack.push(path);
+                while (!stack.empty()) {
+                    String parent = stack.pop();
+                    if (parent != null) {
+                        file = new File(parent);
+                        if (file.isDirectory()) { // ignore file, FIXME
+                            fs = file.listFiles();
+                        } else {
+                            continue;
+                        }
+                    }
+                    if (fs == null || fs.length == 0) continue;
+                    for (File f : fs) {
+                        final String name = f.getName();
+                        if (f.isDirectory() && !name.equals(".")
+                                && !name.equals("..")) {
+                            stack.push(f.getPath());
+                        } else if (f.isFile()) {
+                            if (name.endsWith(".amr")) {
+                                voicePaths.add(f.getAbsolutePath());
+                                Log.v(TAG, "doInBackground: found : " + f.getAbsolutePath());
                             }
                         }
                     }
                 }
+                Log.d(TAG, "doInBackground: folder " + file.getName() + "'s task finished");
             }
         }
         return voicePaths;
