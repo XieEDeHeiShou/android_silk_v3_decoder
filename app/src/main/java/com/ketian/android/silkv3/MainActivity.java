@@ -12,9 +12,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ViewPager mViewPager;
-    private PagerAdapter mPagerAdapter;
-
     private List<Fragment> mFragments = null;
 
     @Override
@@ -24,8 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
         initFragments();
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        ViewPager mViewPager = findViewById(R.id.pager);
+        PagerAdapter mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
     }
 
@@ -38,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class PagerAdapter extends FragmentPagerAdapter {
 
-        public PagerAdapter(FragmentManager fm) {
+        PagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

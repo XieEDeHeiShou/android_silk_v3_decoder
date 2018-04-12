@@ -1,6 +1,5 @@
 package com.ketian.android.silkv3;
 
-import android.content.Context;
 import android.os.Environment;
 
 import java.io.File;
@@ -12,12 +11,12 @@ import java.util.List;
  */
 public class PathUtils {
 
-    public static List<String> voice_wechat_paths;
-    public static List<String> voice_qq_paths;
+    private static List<String> voice_wechat_paths;
+    private static List<String> voice_qq_paths;
 
     private static String export_dir;
 
-    public static void init(Context context) {
+    public static void init() {
         voice_wechat_paths = new ArrayList<>();
         voice_qq_paths = new ArrayList<>();
 
@@ -40,6 +39,7 @@ public class PathUtils {
 
             File exportDir = new File(dir, "silkv3_mp3");
             if (!exportDir.exists()) {
+                //noinspection ResultOfMethodCallIgnored
                 exportDir.mkdirs();
             }
 
@@ -47,11 +47,11 @@ public class PathUtils {
         }
     }
 
-    public static List<String> getVoiceFiles_WeChat(Context context) {
+    public static List<String> getVoiceFiles_WeChat() {
         return voice_wechat_paths;
     }
 
-    public static List<String> getVoiceFiles_QQ(Context context) {
+    public static List<String> getVoiceFiles_QQ() {
         return voice_qq_paths;
     }
 
